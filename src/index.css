@@ -1,0 +1,33 @@
+body {
+  margin: 0;
+  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  line-height: 1.6; 
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Rozha One', serif;
+  margin-bottom: 0.5rem; 
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+} 
+
+.gold-bg {
+  background-color: #E8D46E;
+  color: white;
+}
+
+
+/* Custom background colour for the expanded navbar menu */
+.navbar-collapse.show {
+  background-color: #E8D46E; 
+  border-radius: 5px; 
+}
+
+footer { 
+  margin-top: 50px;
+}
