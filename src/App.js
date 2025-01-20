@@ -11,6 +11,7 @@ import CreateVenue from "./pages/Create";
 import Footer from "./components/Footer";
 import Venueid from "./pages/Venueid";
 import Logout from "./pages/Logout";
+import UpdateVenue from "./pages/Update";
 import CalendarBookings from "./components/CalanderBookings";
 
 function App() {
@@ -42,6 +43,9 @@ function App() {
           <Route path="/profiles/:name" element={<Profiles />} />
           <Route path="/logout" element={<Logout />} />
           <Route path="/bookings/:id" element={<CalendarBookings />} />
+          <Route path="/update/:id" element={<UpdateVenue />} />
+{/* <Route path="/delete-venue/:id" component={DeleteVenue} /> */}
+
         </Routes>
       </main>
       <Footer />
