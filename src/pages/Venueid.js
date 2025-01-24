@@ -55,7 +55,7 @@ const Venueid = () => {
           <h1>{venue.name}</h1>
           <p>{venue.description}</p>
           <p><strong>Price:</strong> {venue.price} kr</p>
-          <p><strong>Maximum Guests:</strong> {venue.maxGuests}</p>
+          <p><strong>Booked:</strong> {venue._count?.bookings || 0} times</p>
           <div><strong>Amenities:</strong></div>
           <ul>
             {venue.meta && (
@@ -73,8 +73,7 @@ const Venueid = () => {
       {/* Calendar Bookings */}
       <div className="row mt-4">
         <div className="col">
-        <CalendarBookings venue={venue} venueId={id} />
-
+          <CalendarBookings venueId={id} />
         </div>
       </div>
     </div>

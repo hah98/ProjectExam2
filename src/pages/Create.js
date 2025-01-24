@@ -68,7 +68,7 @@ function CreateVenue() {
     };
 
     try {
-      const token = localStorage.getItem("authToken"); // Ensure token is retrieved correctly
+      const token = localStorage.getItem("authToken"); 
       if (!token) {
         setMessage("Authentication token is missing. Please log in again.");
         setLoading(false);
@@ -89,7 +89,7 @@ function CreateVenue() {
       const result = await response.json();
 
       if (response.ok) {
-        console.log("Venue Created Successfully:", result); // Log the created venue details
+        console.log("Venue Created Successfully:", result); 
         setMessage("Venue created successfully!");
         setFormData({
           name: "",

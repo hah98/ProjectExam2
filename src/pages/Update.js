@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 const Update = () => {
-  const { id } = useParams();  
-  const navigate = useNavigate();  
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [username, setUsername] = useState(null);
   const [formData, setFormData] = useState({
     name: "",
     description: "",
@@ -12,7 +13,20 @@ const Update = () => {
     media: "",
   });
 
-  const [venue, setVenue] = useState(null);  
+  const [venue, setVenue] = useState(null);
+
+  // Fetch username from localStorage
+  useEffect(() => {
+    const user = localStorage.getItem("user");
+    if (user) {
+      try {
+        const parsedUser = JSON.parse(user);
+        setUsername(parsedUser.name); 
+      } catch (error) {
+        console.error("Error parsing user data from localStorage:", error);
+      }
+    }
+  }, []);
 
   useEffect(() => {
     const fetchVenue = async () => {
@@ -24,23 +38,26 @@ const Update = () => {
       }
 
       try {
-        const response = await fetch(`https://v2.api.noroff.dev/holidaze/venues/${id}`, {
-          method: "GET",  
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        });
+        const response = await fetch(
+          `https://v2.api.noroff.dev/holidaze/venues/${id}`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
 
         const data = await response.json();
         if (response.ok) {
-          setVenue(data.data);  
+          setVenue(data.data);
           setFormData({
             name: data.data.name,
             description: data.data.description,
             price: data.data.price,
             maxGuests: data.data.maxGuests,
-            media: data.data.media[0]?.url || "",  
+            media: data.data.media[0]?.url || "",
           });
         } else {
           console.error("Failed to fetch venue data:", data);
@@ -51,7 +68,7 @@ const Update = () => {
     };
 
     fetchVenue();
-  }, [id]);  
+  }, [id]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -67,38 +84,46 @@ const Update = () => {
     const token = localStorage.getItem("authToken");
 
     if (!token) {
-      console.error("Authorization token is missing.");
       alert("Please log in again.");
       return;
     }
 
     const updatedVenue = {
       ...formData,
-      price: parseFloat(formData.price), 
-      maxGuests: parseInt(formData.maxGuests),  
+      price: parseFloat(formData.price),
+      maxGuests: parseInt(formData.maxGuests),
+      media: formData.media ? [{ url: formData.media }] : [],
     };
 
-    console.log("Updating venue with data:", updatedVenue);
-
     try {
-      const response = await fetch(`https://v2.api.noroff.dev/holidaze/venues/${id}`, {
-        method: "PUT",  
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "X-Noroff-API-Key": "cc5b6445-15c9-404b-b055-4efeafeedd57", 
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(updatedVenue),  
-      });
+      const response = await fetch(
+        `https://v2.api.noroff.dev/holidaze/venues/${id}`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "X-Noroff-API-Key": "cc5b6445-15c9-404b-b055-4efeafeedd57",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(updatedVenue),
+        }
+      );
 
       const data = await response.json();
 
       if (response.ok) {
         alert("Venue updated successfully");
-        navigate(`/profile`); 
+
+        // Redirect to the user's profile
+        if (username) {
+          navigate(`/profiles/${username}`);
+        } else {
+          console.error("Username not found in localStorage.");
+          navigate("/"); 
+        }
       } else {
         console.error("Failed to update venue:", data);
-        alert(`Failed to update venue: ${data.message || 'Unknown error'}`);
+        alert(`Failed to update venue: ${data.message || "Unknown error"}`);
       }
     } catch (error) {
       console.error("Error updating venue:", error);
@@ -113,7 +138,9 @@ const Update = () => {
         <form className="p-4 border rounded" onSubmit={handleSubmit}>
           {/* Venue Name */}
           <div className="mb-3">
-            <label htmlFor="name" className="form-label">Venue Name</label>
+            <label htmlFor="name" className="form-label">
+              Venue Name
+            </label>
             <input
               type="text"
               className="form-control"
@@ -127,7 +154,9 @@ const Update = () => {
 
           {/* Description */}
           <div className="mb-3">
-            <label htmlFor="description" className="form-label">Description</label>
+            <label htmlFor="description" className="form-label">
+              Description
+            </label>
             <textarea
               className="form-control"
               id="description"
@@ -141,7 +170,9 @@ const Update = () => {
 
           {/* Price */}
           <div className="mb-3">
-            <label htmlFor="price" className="form-label">Price (per night)</label>
+            <label htmlFor="price" className="form-label">
+              Price (per night)
+            </label>
             <input
               type="number"
               className="form-control"
@@ -155,7 +186,9 @@ const Update = () => {
 
           {/* Max Guests */}
           <div className="mb-3">
-            <label htmlFor="maxGuests" className="form-label">Maximum Guests</label>
+            <label htmlFor="maxGuests" className="form-label">
+              Maximum Guests
+            </label>
             <input
               type="number"
               className="form-control"
@@ -169,7 +202,9 @@ const Update = () => {
 
           {/* Media */}
           <div className="mb-3">
-            <label htmlFor="media" className="form-label">Image URL</label>
+            <label htmlFor="media" className="form-label">
+              Image URL
+            </label>
             <input
               type="url"
               className="form-control"
@@ -182,11 +217,13 @@ const Update = () => {
 
           {/* Submit Button */}
           <div className="d-flex justify-content-center">
-            <button type="submit" className="btn btn-primary">Update Venue</button>
+            <button type="submit" className="btn btn-primary">
+              Update Venue
+            </button>
           </div>
         </form>
       ) : (
-        <p>Loading venue details...</p> 
+        <p>Loading venue details...</p>
       )}
     </div>
   );

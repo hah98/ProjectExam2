@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import 'bootstrap/dist/css/bootstrap.min.css';
 import Header from "./components/Header";
 import Home from "./pages/Home";
 import About from "./pages/About";
@@ -44,7 +45,6 @@ function App() {
           <Route path="/logout" element={<Logout />} />
           <Route path="/bookings/:id" element={<CalendarBookings />} />
           <Route path="/update/:id" element={<UpdateVenue />} />
-{/* <Route path="/delete-venue/:id" component={DeleteVenue} /> */}
 
         </Routes>
       </main>

@@ -11,11 +11,12 @@ const Profile = () => {
     venueManager: false,
   });
   const [venues, setVenues] = useState([]);
+  const [bookings, setBookings] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [avatarUrl, setAvatarUrl] = useState("");
   const [venueManagerStatus, setVenueManagerStatus] = useState(false);
 
-  // Fetch Profile Data and Venues
+  // Fetch Profile Data, Venues, and Bookings
   useEffect(() => {
     const authToken = localStorage.getItem("authToken");
 
@@ -24,7 +25,7 @@ const Profile = () => {
       return;
     }
 
-    const fetchProfile = async () => {
+    const fetchData = async () => {
       try {
         setIsLoading(true);
 
@@ -38,10 +39,9 @@ const Profile = () => {
             },
           }
         );
-        
+
         if (profileResponse.ok) {
           const profileData = await profileResponse.json();
-          console.log("Fetched profile data:", profileData);
           setProfile({
             ...profileData.data,
             avatar: profileData.data.avatar || { url: "", alt: "" },
@@ -62,13 +62,30 @@ const Profile = () => {
             },
           }
         );
-        
+
         if (venuesResponse.ok) {
           const venuesData = await venuesResponse.json();
-          console.log("Fetched venues data:", venuesData);
           setVenues(venuesData.data);
         } else {
           console.error("Failed to fetch venues. Status:", venuesResponse.status);
+        }
+
+        // Fetch Bookings Data
+        const bookingsResponse = await fetch(
+          `https://v2.api.noroff.dev/holidaze/profiles/${name}/bookings?_venue=true`,
+          {
+            headers: {
+              Authorization: `Bearer ${authToken}`,
+              "X-Noroff-API-Key": "cc5b6445-15c9-404b-b055-4efeafeedd57",
+            },
+          }
+        );
+
+        if (bookingsResponse.ok) {
+          const bookingsData = await bookingsResponse.json();
+          setBookings(bookingsData.data);
+        } else {
+          console.error("Failed to fetch bookings. Status:", bookingsResponse.status);
         }
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -77,12 +94,8 @@ const Profile = () => {
       }
     };
 
-    fetchProfile();
+    fetchData();
   }, [name]);
-
-  if (!name) {
-    return <p>Error: No user name provided.</p>;
-  }
 
   const handleAvatarChange = (event) => {
     setAvatarUrl(event.target.value);
@@ -115,18 +128,14 @@ const Profile = () => {
 
       if (response.ok) {
         const data = await response.json();
-        console.log("Profile updated:", data);
         setProfile((prevProfile) => ({
           ...prevProfile,
           avatar: data.avatar,
         }));
         alert("Avatar updated successfully!");
-
-        // Reload the page after successful update
         window.location.reload();
       } else {
         const errorData = await response.json();
-        console.error("Failed to update profile:", errorData);
         alert(`Error: ${errorData.message || "Failed to update avatar."}`);
       }
     } catch (error) {
@@ -137,8 +146,6 @@ const Profile = () => {
 
   const handleVenueManagerUpdate = async () => {
     const authToken = localStorage.getItem("authToken");
-
-    // Toggle venue manager status
     const updatedStatus = !venueManagerStatus;
 
     const updatedProfile = {
@@ -161,20 +168,16 @@ const Profile = () => {
 
       if (response.ok) {
         const data = await response.json();
-        console.log("Venue Manager status updated:", data);
-
-        // Update local state
         setVenueManagerStatus(data.venueManager ?? false);
-
-        // Notify user
         alert(
           `You are now ${
             data.venueManager ? "registered as a Venue Manager" : "not a Venue Manager"
           }.`
         );
+        // Refresh after success
+        window.location.reload();
       } else {
         const errorData = await response.json();
-        console.error("Failed to update Venue Manager status:", errorData);
         alert(`Error: ${errorData.message || "Failed to update status."}`);
       }
     } catch (error) {
@@ -183,12 +186,16 @@ const Profile = () => {
     }
   };
 
+  if (!name) {
+    return <p>Error: No user name provided.</p>;
+  }
+
   const handleDeleteVenue = async (venueId) => {
     const authToken = localStorage.getItem("authToken");
-
+  
     const confirmDelete = window.confirm("Are you sure you want to delete this venue?");
     if (!confirmDelete) return;
-
+  
     try {
       const response = await fetch(
         `https://v2.api.noroff.dev/holidaze/venues/${venueId}`,
@@ -200,7 +207,7 @@ const Profile = () => {
           },
         }
       );
-
+  
       if (response.ok) {
         setVenues(venues.filter((venue) => venue.id !== venueId));
         alert("Venue deleted successfully!");
@@ -214,7 +221,7 @@ const Profile = () => {
       alert("An unexpected error occurred. Please try again later.");
     }
   };
-
+  
   return (
     <div className="container mt-5">
       <h1 className="mb-4">Profile Page</h1>
@@ -332,6 +339,32 @@ const Profile = () => {
                   ))}
                 </div>
               </div>
+
+          {/* Upcoming Bookings Section */}
+          <div className="mt-4">
+            <h4>Upcoming Bookings</h4>
+            <div className="row">
+              {bookings.length > 0 ? (
+                bookings.map((booking) => (
+                  <div key={booking.id} className="col-md-6 col-lg-4">
+                    <div className="card h-100 border-0">
+                      <div className="card-body">
+                        <h5 className="card-title">{booking.venue.name}</h5>
+                        <p className="card-text">
+                          Guests: {booking.guests} <br />
+                          Check-in: {new Date(booking.dateFrom).toLocaleDateString()} <br />
+                          Check-out: {new Date(booking.dateTo).toLocaleDateString()}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <p>No upcoming bookings found.</p>
+              )}
+            </div>
+          </div>
+
             </div>
           </div>
         </>

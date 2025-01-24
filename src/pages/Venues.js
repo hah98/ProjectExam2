@@ -50,8 +50,8 @@ const Venues = ({ showLimit }) => {
   alt={venue.media[0]?.alt || "Venue"}
   className="card-img-top img-fluid"
   style={{
-    height: "200px", // Set a consistent height for all images
-    objectFit: "cover", // Ensures the image fills the width while cropping excess
+    height: "200px",
+    objectFit: "cover", 
   }}
 />
 
@@ -90,7 +90,7 @@ const Venues = ({ showLimit }) => {
 };
 
 Venues.defaultProps = {
-  showLimit: null, // Default to show all venues
+  showLimit: null, 
 };
 
 export default Venues;

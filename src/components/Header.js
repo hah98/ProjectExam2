@@ -30,7 +30,7 @@ function Header({ venues }) {
         backgroundImage: `url("/assets/images/forside.jpeg")`,
         backgroundSize: "cover",
         backgroundPosition: "center",
-        height: "40vh",
+        height: "60vh",
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
@@ -75,65 +75,66 @@ function Header({ venues }) {
             <span className="navbar-toggler-icon"></span>
           </button>
 
-          {/* Links */}
-          <div className="collapse navbar-collapse justify-content-end" id="navbarNav">
-            <ul className="navbar-nav">
-              <li className="nav-item">
-                <Link className="nav-link fw-bold" to="/venues">
-                  Venues
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link fw-bold" to="/about">
-                  About Us
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link fw-bold" to="/Create">
-                  List a Venue
-                </Link>
-              </li>
-              {isLoggedIn ? (
-                <>
-                  <li className="nav-item">
-                    <Link
-                      className="nav-link fw-bold"
-                      to={username ? `/profiles/${username}` : "/"}
-                    >
-                      My Profile
-                    </Link>
-                  </li>
-                  <li className="nav-item">
-                    <Link className="btn btn-dark" to="/logout">
-                      Log Out
-                    </Link>
-                  </li>
-                </>
-              ) : (
-                <>
-                  <li className="nav-item">
-                    <Link className="btn btn-dark" to="/login">
-                      Login
-                    </Link>
-                  </li>
-                  <li className="nav-item">
-                    <Link className="btn btn-dark" to="/register">
-                      Register
-                    </Link>
-                  </li>
-                </>
-              )}
-              {/* Search Icon */}
-              <li className="nav-item">
-                <button
-                  className="btn btn-outline-secondary mx-2"
-                  onClick={toggleSearchBar}
-                >
-                  <i className="bi bi-search"></i>
-                </button>
-              </li>
-            </ul>
-          </div>
+            {/* Links */}
+    <div className="collapse navbar-collapse justify-content-end" id="navbarNav">
+      <ul className="navbar-nav">
+        <li className="nav-item">
+          <Link className="nav-link fw-bold" to="/venues">
+            Venues
+          </Link>
+        </li>
+        <li className="nav-item">
+          <Link className="nav-link fw-bold" to="/about">
+            About Us
+          </Link>
+        </li>
+        {isLoggedIn ? (
+          <>
+           <li className="nav-item">
+              <Link className="nav-link fw-bold" to="/Create">
+                List Venue
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link
+                className="nav-link fw-bold"
+                to={username ? `/profiles/${username}` : "/"}
+              >
+                My Profile
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link className="btn btn-dark" to="/logout">
+                Log Out
+              </Link>
+            </li>
+          </>
+        ) : (
+          <>
+            <li className="nav-item">
+              <Link className="btn btn-dark" to="/login">
+                Login
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link className="btn btn-dark" to="/register">
+                Register
+              </Link>
+            </li>
+          </>
+        )}
+        {/* Search Icon */}
+        <li className="nav-item">
+          <button
+            className="btn btn-outline-secondary mx-2"
+            onClick={toggleSearchBar}
+          >
+            <i className="bi bi-search text-dark"></i> 
+          </button>
+        </li>
+      </ul>
+    </div>
+
         </div>
       </nav>
 
@@ -144,7 +145,7 @@ function Header({ venues }) {
         </div>
       </div>
 
-      {/* Conditionally Rendered Search Bar */}
+      {/*  Search Bar */}
       {showSearchBar && (
         <div
           className="position-absolute top-0 start-50 translate-middle-x"
