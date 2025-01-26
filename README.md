@@ -1,10 +1,10 @@
 # 🌴 Holidaze: Accommodation Booking Frontend
 ![projectexam2image](https://github.com/user-attachments/assets/067a0d97-31f3-49e7-8b32-a7f869a5d26a)
 
-![GitHub repo size](https://img.shields.io/github/repo-size/hah98/Project-Exam-2)
-![GitHub top language](https://img.shields.io/github/languages/top/hah98/Project-Exam-2)
-![GitHub last commit](https://img.shields.io/github/last-commit/hah98/Project-Exam-2)
-![GitHub license](https://img.shields.io/github/license/hah98/Project-Exam-2)
+![GitHub repo size](https://img.shields.io/github/repo-size/hah98/ProjectExam2)
+![GitHub top language](https://img.shields.io/github/languages/top/hah98/ProjectExam2)
+![GitHub last commit](https://img.shields.io/github/last-commit/hah98/ProjectExam2)
+
 
 Welcome to **Holidaze**, an accommodation booking platform. This project focuses on creating a modern, feature-rich frontend for Holidaze, providing both customer-facing and admin-facing interfaces.
 
@@ -57,7 +57,7 @@ To run this project locally, follow these steps:
 1. Clone the repository:
 
    ```bash
-   git clone git@github.com:hah98/Project-Exam-2.git
+   git clone git@github.com:hah98/ProjectExam2.git
 4. Start the development server:
 
    ```bash
@@ -115,14 +115,13 @@ If you'd like to contribute to this project, follow these steps:
    - Navigate to the original repository.
    - Click the "New Pull Request" button and provide a description of your changes.
 
-THIS PROJECT IS CURRENTLY NOT DONE DO ITS A WORK IN PROGRESS, But feel free tp check it out and leave feedback. 😊
+Feel free to check it out and leave feedback. 😊
 
 ## 🖥️ API Reference
 
 This project fetches product data from the Noroff API:
 
-- **API Endpoint**: [https://v2.api.noroff.dev/online-shop](https://v2.api.noroff.dev/holidaze/bookings)
-
+- **API Endpoint**: [https://v2.api.noroff.dev/holidaze/bookings]
 
 ## 📞 Contact
 
