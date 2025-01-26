@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { useParams, Navigate } from "react-router-dom"; 
-import CalendarBookings from '../components/CalanderBookings'; 
+import { useParams, Navigate } from "react-router-dom";
+import CalendarBookings from "../components/CalendarBookings";
+
 
 const Venueid = () => {
-  const { id } = useParams(); 
+  const { id } = useParams();
   const [venue, setVenue] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -11,7 +12,9 @@ const Venueid = () => {
   useEffect(() => {
     const fetchVenue = async () => {
       try {
-        const response = await fetch(`https://v2.api.noroff.dev/holidaze/venues/${id}`);
+        const response = await fetch(
+          `https://v2.api.noroff.dev/holidaze/venues/${id}`
+        );
         if (!response.ok) {
           throw new Error("Failed to fetch venue");
         }
@@ -23,7 +26,6 @@ const Venueid = () => {
         setLoading(false);
       }
     };
-    
 
     fetchVenue();
   }, [id]);
@@ -78,7 +80,6 @@ const Venueid = () => {
       </div>
     </div>
   );
-  
 };
 
 export default Venueid;

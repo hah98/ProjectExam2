@@ -13,7 +13,7 @@ import Footer from "./components/Footer";
 import Venueid from "./pages/Venueid";
 import Logout from "./pages/Logout";
 import UpdateVenue from "./pages/Update";
-import CalendarBookings from "./components/CalanderBookings";
+import CalendarBookings from "./components/CalendarBookings";
 
 function App() {
   const [venues, setVenues] = useState({ data: [] });

@@ -8,7 +8,6 @@ const CalendarBookings = ({ venueId }) => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [showModal, setShowModal] = useState(false);
 
-  // Fetch the bookings for the venue from the API
   const fetchBookings = async (venueId) => {
     try {
       const response = await fetch(`https://v2.api.noroff.dev/holidaze/bookings?venueId=${venueId}`, {
@@ -16,7 +15,7 @@ const CalendarBookings = ({ venueId }) => {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("authToken")}`,
           "Content-Type": "application/json",
-          "X-Noroff-API-Key": "cc5b6445-15c9-404b-b055-4efeafeedd57", // API key
+          "X-Noroff-API-Key": "cc5b6445-15c9-404b-b055-4efeafeedd57", 
         },
       });
 
@@ -33,7 +32,6 @@ const CalendarBookings = ({ venueId }) => {
     }
   };
 
-  // Process the fetched bookings and return the booked dates
   const processBookings = (bookings) => {
     return bookings.map((booking) => ({
       dateFrom: new Date(booking.dateFrom),
@@ -51,7 +49,6 @@ const CalendarBookings = ({ venueId }) => {
     fetchAndSetBookings();
   }, [venueId]);
 
-  // Function to check if a date is booked
   const isBooked = (date) => {
     return bookedDates.some(
       (booking) => date >= new Date(booking.dateFrom).setHours(0, 0, 0, 0) &&
@@ -59,7 +56,6 @@ const CalendarBookings = ({ venueId }) => {
     );
   };
 
-  // Handle date selection for booking
   const handleDateSelect = (date) => {
     if (!isBooked(date)) {
       setSelectedDate(date);
@@ -68,26 +64,25 @@ const CalendarBookings = ({ venueId }) => {
     }
   };
 
-  // Handle booking submission
   const handleBooking = async () => {
     if (!selectedDate) {
       alert("Please select a valid date to book.");
       return;
     }
-
-    // Get the selected date
+  
+    
     const dateFrom = selectedDate;
     const dateTo = new Date(dateFrom);
     dateTo.setDate(dateFrom.getDate() + 1); 
-
+  
     const guests = 1; 
-
+  
     const token = localStorage.getItem("authToken"); 
     if (!token) {
       alert("Authentication token is missing. Please log in again.");
       return;
     }
-
+  
     try {
       const response = await fetch(`https://v2.api.noroff.dev/holidaze/bookings`, {
         method: "POST",
@@ -103,13 +98,15 @@ const CalendarBookings = ({ venueId }) => {
           venueId: venueId, 
         }),
       });
-
-      // Handle response
+  
       const result = await response.json();
-
+  
       if (response.ok) {
         setSelectedDate(null); 
         setShowModal(true); 
+  
+        // Loggin the succesful booking in the console
+        console.log(`Successfully booked: ${dateFrom.toISOString()} to ${dateTo.toISOString()}`);
       } else {
         console.error("Error in response:", result);
         alert(`Booking failed: ${result.message || "Unknown error"}`);
@@ -119,11 +116,13 @@ const CalendarBookings = ({ venueId }) => {
       alert("An error occurred while making the booking.");
     }
   };
+  
 
-  // Render the calendar
+  // Rendering the calendar
   return (
     <div className="calendar-bookings">
       <h3>Available Dates for Booking</h3>
+      <p> Skip forward to year 2035, sorry for the inconvenience</p>
 
       {/* Render the react-calendar */}
       <Calendar
@@ -183,5 +182,4 @@ const CalendarBookings = ({ venueId }) => {
 };
 
 export default CalendarBookings;
-
 

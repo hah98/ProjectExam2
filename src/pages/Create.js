@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 function CreateVenue() {
   const [formData, setFormData] = useState({
@@ -22,7 +23,22 @@ function CreateVenue() {
   });
 
   const [loading, setLoading] = useState(false);
+  const [username, setUsername] = useState(null);
   const [message, setMessage] = useState("");
+  const navigate = useNavigate(); // Initialize navigate
+
+  // Fetch username from localStorage
+  useEffect(() => {
+    const user = localStorage.getItem("user");
+    if (user) {
+      try {
+        const parsedUser = JSON.parse(user);
+        setUsername(parsedUser.name); // Assuming the user object has a 'name' field
+      } catch (error) {
+        console.error("Error parsing user data from localStorage:", error);
+      }
+    }
+  }, []);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -68,7 +84,7 @@ function CreateVenue() {
     };
 
     try {
-      const token = localStorage.getItem("authToken"); 
+      const token = localStorage.getItem("authToken");
       if (!token) {
         setMessage("Authentication token is missing. Please log in again.");
         setLoading(false);
@@ -79,18 +95,27 @@ function CreateVenue() {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
-          "X-Noroff-API-Key": "cc5b6445-15c9-404b-b055-4efeafeedd57", 
+          "X-Noroff-API-Key": "cc5b6445-15c9-404b-b055-4efeafeedd57",
           "Content-Type": "application/json",
         },
         body: JSON.stringify(venueData),
-
       });
 
       const result = await response.json();
 
       if (response.ok) {
-        console.log("Venue Created Successfully:", result); 
+        console.log("Venue Created Successfully:", result);
         setMessage("Venue created successfully!");
+
+        // Redirect to the user's profile if username exists
+        if (username) {
+          navigate(`/profiles/${username}`);
+        } else {
+          console.error("Username not found in localStorage.");
+          navigate("/"); // Redirect to home if no username found
+        }
+
+        // Reset form data
         setFormData({
           name: "",
           description: "",
@@ -193,7 +218,6 @@ function CreateVenue() {
             value={formData.media}
             onChange={handleChange}
           />
-         
         </div>
 
         {/* Meta (WiFi, Parking, etc.) */}
@@ -213,16 +237,16 @@ function CreateVenue() {
           </div>
         ))}
 
+        {/* Submit Button */}
+        <button type="submit" className="btn btn-primary mt-3" disabled={loading}>
+          {loading ? "Submitting..." : "Create Venue"}
+        </button>
+      </form>
 
-    {/* Submit Button */}
-    <button type="submit" className="btn btn-primary mt-3" disabled={loading}>
-      {loading ? "Submitting..." : "Create Venue"}
-    </button>
-  </form>
-
-  {/* Feedback Message */}
-  {message && <p className="mt-3 alert alert-info">{message}</p>}
-</div>
-); }
+      {/* Feedback Message */}
+      {message && <p className="mt-3 alert alert-info">{message}</p>}
+    </div>
+  );
+}
 
 export default CreateVenue;
