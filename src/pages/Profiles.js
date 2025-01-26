@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
+import React, { useState, useEffect} from "react";
+import { useParams, Link, useNavigate  } from "react-router-dom";
 
 const Profile = () => {
   const { name } = useParams();
+  const navigate = useNavigate();
 
   const [profile, setProfile] = useState({
     name: "",
@@ -174,8 +175,8 @@ const Profile = () => {
             data.venueManager ? "registered as a Venue Manager" : "not a Venue Manager"
           }.`
         );
-        // Refresh after success
-        window.location.reload();
+        // Navigate back to main page for upate of manager status
+      navigate(`/`);
       } else {
         const errorData = await response.json();
         alert(`Error: ${errorData.message || "Failed to update status."}`);
